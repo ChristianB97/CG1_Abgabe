@@ -1,0 +1,26 @@
++++
+- Gouraud-Shader?
+- eigene Transform-Funktionen!                                            - planned
+
+++
+- Transparenz!
+- Nebel!                                                                  - planned
+- Nebel in komplexer Szene!                                               - planned?
+- Umgebungstexturspieglung!
+- gleichzeitige Verwendung von mindestens zwei Texturen in einem Objekt!
+
++
+- Default-Texture-Settings                                                - planned
+- modular frame buffer                                                    - planned
+- Kamerarotation durch drag                                               - Ansatz
+- material-Dateien lesen
+- objekte aufteilen für verschiedene Materialien                          - planned
+- Portal mit Stencil
+- Verwendung einer Videotextur
+- ui voll funktionsfähig
+
+Road to Endabgabe
+Donnerstag: Bloom, UIPostProcessing, Preload
+Freitag:    translate, rotate, resize, invertieren, einheitsmatrix
+Samstag:    Nebel
+Sonntag:    Objekte aufteilen
