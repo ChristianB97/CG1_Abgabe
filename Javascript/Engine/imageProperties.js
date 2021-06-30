@@ -13,6 +13,7 @@ export function ImageProperties(imageLocation, texImage2DParameters)
   this.setTexImage2DParameters = function(parameters) { this.texImage2DParameters = parameters; }
   this.getImage = null;
   this.onImageLoaded = new ActionEvent();
+  this.imageLocation = imageLocation;
   getImage(imageLocation, setImage.bind(this));
 }
 

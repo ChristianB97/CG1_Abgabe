@@ -6,6 +6,7 @@ import { MeshDraw } from "./meshDraw.js";
 
 export function MeshRenderer(objFileName, transform, vertexShaderName, fragmentShaderName)
 {
+  this.objFileName = objFileName;
   this.objectData = null;
   this.transform = transform;
   this.textureHolder = new TextureHolder();
@@ -30,8 +31,8 @@ function setDefaultUniforms()
 
 function isDataLoaded(){
   var isOBJLoaded = this.objectData!=null;
-  var isTextureCreatedIfPossible = this.textureHolder.isEverythingLoaded();
-  return isOBJLoaded&&isTextureCreatedIfPossible;
+  var isTextureCurrentlyLoading = this.textureHolder.isCurrentlyLoading;
+  return isOBJLoaded&&!isTextureCurrentlyLoading;
 }
 
 function onVBOLoadedCallback(loadedData)

@@ -3,36 +3,60 @@ import { ShaderGroup } from "./shaderGroup.js";
 
 export function ShaderGroupPool()
 {
-  this.shaderGroups = [];
-  this.registerRenderer = function(renderer) { registerMeshRenderer(this. shaderGroups, renderer) }
+  this.loadedShaderGroups = [];
+  this.unloadedShaderGroups = [];
+  this.registerRenderer = registerMeshRenderer.bind(this);
 }
 
-function registerMeshRenderer(shaderGroups, renderer)
+function registerMeshRenderer(renderer)
 {
-  var foundGroup = false;
-  shaderGroups.forEach((shaderGroup, i) => {
-    if (shaderGroup.areSameShadersUsed(renderer.shaderContainer.vertexShader, renderer.shaderContainer.fragmentShader))
+  let foundGroup = false;
+  let length = Math.max(this.loadedShaderGroups.length, this.unloadedShaderGroups.length);
+  let i = 0;
+  while (i<=length&&!foundGroup) {
+    if (i<this.loadedShaderGroups.length)
     {
-      shaderGroup.addRenderer(renderer);
-      foundGroup=true;
-      return;
+      let isSuccessful = addRendererIfShadersMatchingWithShaderGroup(this.loadedShaderGroups[i], renderer);
+      foundGroup = isSuccessful;
     }
-  });
+    if (i<this.unloadedShaderGroups.length){
+      let isSuccessful = addRendererIfShadersMatchingWithShaderGroup(this.unloadedShaderGroups[i], renderer);
+      foundGroup = isSuccessful;
+    }
+    i++;
+  }
   if (!foundGroup)
   {
-    createShaderGroup(shaderGroups, renderer);
+    createShaderGroup.call(this, renderer);
   }
 }
 
-function createShaderGroup(shaderGroups, renderer)
-{
-  var shaderGroup = new ShaderGroup(renderer.shaderContainer.vertexShader, renderer.shaderContainer.fragmentShader);
-  shaderGroup.addRenderer(renderer);
-  addProgramToShaderGroup(shaderGroup);
-  shaderGroups.push(shaderGroup);
+function addRendererIfShadersMatchingWithShaderGroup(shaderGroup, renderer){
+  if (shaderGroup.areSameShadersUsed(renderer.shaderContainer.vertexShader, renderer.shaderContainer.fragmentShader))
+  {
+    shaderGroup.addRenderer(renderer);
+    return true;
+  }
+  return false;
 }
 
-async function addProgramToShaderGroup(shaderGroup){
-  var prog = await createAndGetProgram(shaderGroup.vertexShaderName, shaderGroup.fragmentShaderName);
-  shaderGroup.program = prog;
+function createShaderGroup(renderer)
+{
+  var shaderGroup = new ShaderGroup(renderer.shaderContainer.vertexShaderLocation, renderer.shaderContainer.fragmentShaderLocation);
+  this.unloadedShaderGroups.push(shaderGroup);
+  shaderGroup.onProgramReady.addEventListener(pushShaderGroupToLoadedList.bind(this));
+
+  shaderGroup.loadProgram();
+  shaderGroup.addRenderer(renderer);
+}
+
+function pushShaderGroupToLoadedList(loadedShaderGroup){
+  this.loadedShaderGroups.push(loadedShaderGroup);
+  this.unloadedShaderGroups.forEach((unloadedShaderGroup, i) => {
+    if (loadedShaderGroup==unloadedShaderGroup)
+    {
+      this.unloadedShaderGroups.splice(i, 1);
+      return;
+    }
+  });
 }

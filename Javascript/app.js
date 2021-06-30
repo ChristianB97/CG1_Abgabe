@@ -12,8 +12,8 @@ var renderPath;
 var InitDemo = async function()
 {
   var canvas = document.getElementById("game-surface");
-  var defaultRenderPath = new RenderPath(canvas, true);
-  renderPath = new RenderPath(canvas, false);
+  var defaultRenderPath = new RenderPath(canvas, false);
+  renderPath = new RenderPath(canvas, true);
 
   var screenObject = new WebObject();
   screenObject.addUIRendererAndRectTransform(canvas);
@@ -35,12 +35,13 @@ var InitDemo = async function()
     ["TEXTURE_MIN_FILTER",        "NEAREST"],
     ["TEXTURE_MAG_FILTER",        "NEAREST"]]
   );
-  boxMeshRenderer2.textureHolder.addImage("Skybox/right.jpg", ["TEXTURE_CUBE_MAP_POSITIVE_X", "RGBA", "RGBA", "UNSIGNED_BYTE"]);
-  boxMeshRenderer2.textureHolder.addImage("Skybox/left.jpg", ["TEXTURE_CUBE_MAP_NEGATIVE_X", "RGBA", "RGBA", "UNSIGNED_BYTE"]);
-  boxMeshRenderer2.textureHolder.addImage("Skybox/top.jpg", ["TEXTURE_CUBE_MAP_POSITIVE_Y", "RGBA", "RGBA", "UNSIGNED_BYTE"]);
-  boxMeshRenderer2.textureHolder.addImage("Skybox/bottom.jpg", ["TEXTURE_CUBE_MAP_NEGATIVE_Y", "RGBA", "RGBA", "UNSIGNED_BYTE"]);
-  boxMeshRenderer2.textureHolder.addImage("Skybox/front.jpg", ["TEXTURE_CUBE_MAP_POSITIVE_Z", "RGBA", "RGBA", "UNSIGNED_BYTE"]);
-  boxMeshRenderer2.textureHolder.addImage("Skybox/back.jpg", ["TEXTURE_CUBE_MAP_NEGATIVE_Z", "RGBA", "RGBA", "UNSIGNED_BYTE"]);
+  boxMeshRenderer2.textureHolder.setTextureByImageLocations(
+  [["Skybox/right.jpg", ["TEXTURE_CUBE_MAP_POSITIVE_X", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
+  ["Skybox/left.jpg", ["TEXTURE_CUBE_MAP_NEGATIVE_X", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
+  ["Skybox/top.jpg", ["TEXTURE_CUBE_MAP_POSITIVE_Y", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
+  ["Skybox/bottom.jpg", ["TEXTURE_CUBE_MAP_NEGATIVE_Y", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
+  ["Skybox/front.jpg", ["TEXTURE_CUBE_MAP_POSITIVE_Z", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
+  ["Skybox/back.jpg", ["TEXTURE_CUBE_MAP_NEGATIVE_Z", "RGBA", "RGBA", "UNSIGNED_BYTE"]]]);
   renderPath.environment3D.addObject(box2);
 
   var suzanne = new WebObject();
@@ -48,7 +49,7 @@ var InitDemo = async function()
   suzanne.addMeshRendererAndTransform("OBJ/suzanne.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
 
   var suzanneMeshRenderer = suzanne.getComponent("MeshRenderer");
-  suzanneMeshRenderer.textureHolder.addImage("Textures/boot.png");
+  suzanneMeshRenderer.textureHolder.setTextureByImageLocation("Textures/boot.png");
   suzanne.getComponent("Transform").translate([0,-3,-3]);
   renderPath.environment3D.addObject(suzanne);
 
@@ -57,7 +58,7 @@ var InitDemo = async function()
   teapot.addMeshRendererAndTransform("OBJ/teapot.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
 
   var teapotMeshRenderer = teapot.getComponent("MeshRenderer");
-  teapotMeshRenderer.textureHolder.addImage("Textures/blattmuster.jpg");
+  teapotMeshRenderer.textureHolder.setTextureByImageLocation("Textures/blattmuster.jpg");
   teapot.getComponent("Transform").translate([6,0,0]);
   renderPath.environment3D.addObject(teapot);
 
@@ -67,7 +68,7 @@ var InitDemo = async function()
   girl.addMeshRendererAndTransform("OBJ/amelia.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
   girl.getComponent("Transform").translate([0,-4,0])
   girl.getComponent("Transform").scale([0.04,0.04,0.04])
-  girl.getComponent("MeshRenderer").textureHolder.addImage("Textures/crate.png");
+  girl.getComponent("MeshRenderer").textureHolder.setTextureByImageLocation("Textures/crate.png");
   girl.getComponent("Transform").translate([0,-9,0]);
   girl.getComponent("Transform").scale([8,8,8]);
   renderPath.environment3D.addObject(girl);
@@ -75,13 +76,13 @@ var InitDemo = async function()
   setDragField(document.getElementById("game-surface"));
 
 
-  var myFirstUI = new WebObject();
-  myFirstUI.addUIRendererAndRectTransform(canvas, "Textures/jojo.jfif", 0.3, "Shader/vertexShaderUI.glsl", "Shader/fragmentShaderUI.glsl");
-  renderPath.canvas2D.addObject(myFirstUI);
-  var uiRect = myFirstUI.getComponent("RectTransform");
+  //var myFirstUI = new WebObject();
+  //myFirstUI.addUIRendererAndRectTransform(canvas, "Textures/jojo.jfif", 0.3, "Shader/vertexShaderUI.glsl", "Shader/fragmentShaderUI.glsl");
+  //renderPath.canvas2D.addObject(myFirstUI);
+  //var uiRect = myFirstUI.getComponent("RectTransform");
 
-  uiRect.scale([0.4,0.4]);
-  uiRect.setPosition([0,0.79]);
+  //uiRect.scale([0.4,0.4]);
+  //uiRect.setPosition([0,0.79]);
 
 
 

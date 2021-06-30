@@ -31,15 +31,12 @@ export function tryInitiatingGL(canvas)
   return gl;
 }
 
-export async function createAndGetProgram(vertexShaderPromiseText, fragmentShaderPromiseText)
+export function createAndGetProgram(vertexShaderText, fragmentShaderText)
 {
   var prog = gl.createProgram();
-  await setShader(prog, vertexShaderPromiseText, gl.VERTEX_SHADER);
-  await setShader(prog, fragmentShaderPromiseText, gl.FRAGMENT_SHADER);
-
+  setShader(prog, vertexShaderText, gl.VERTEX_SHADER);
+  setShader(prog, fragmentShaderText, gl.FRAGMENT_SHADER);
   gl.linkProgram(prog);
-
-
 
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS))
   {
@@ -47,17 +44,13 @@ export async function createAndGetProgram(vertexShaderPromiseText, fragmentShade
     return;
   }
   gl.validateProgram(prog);
-
   return prog;
 }
 
-async function setShader(prog, shaderName, glShaderIdentifier)
+function setShader(prog, shaderText, glShaderIdentifier)
 {
   var shader = gl.createShader(glShaderIdentifier);
-  var response = await fetch(shaderName);
-  await response.text().then(function(text){
-    gl.shaderSource(shader, text);
-  });
+  gl.shaderSource(shader, shaderText);
 
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
@@ -67,14 +60,12 @@ async function setShader(prog, shaderName, glShaderIdentifier)
   gl.attachShader(prog, shader);
 }
 
-export function createAndGetTexture(textureHolder)
+export function createAndGetTexture(imageProperties, glBindingType, glParameters)
 {
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
   let glTexture = gl.createTexture();
-  let imageProperties = textureHolder.imageProperties;
-  let glParameters = textureHolder.glTexParameteris;
 
-  gl.bindTexture(textureHolder.glBindingType, glTexture);
+  gl.bindTexture(glBindingType, glTexture);
   glParameters.forEach((set, i) => {
     gl.texParameteri(set[0], set[1], set[2]);
   });
@@ -82,7 +73,7 @@ export function createAndGetTexture(textureHolder)
 
   for(var i = 0; i < imageProperties.length; i++) {
     if (imageProperties[i].glTexture==null){
-      gl.bindTexture(textureHolder.glBindingType, glTexture);
+      gl.bindTexture(glBindingType, glTexture);
       var glTexImage2DParameters = imageProperties[i].texImage2DParameters;
       gl.texImage2D(glTexImage2DParameters[0], 0, glTexImage2DParameters[1], glTexImage2DParameters[2], glTexImage2DParameters[3], imageProperties[i].image);
     }

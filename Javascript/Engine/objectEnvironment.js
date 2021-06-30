@@ -13,7 +13,7 @@ export function ObjectEnvironment()
 
 function drawObjects(gl, camera)
 {
-  this.shaderGroupPool.shaderGroups.forEach((shaderGroup) =>
+  this.shaderGroupPool.loadedShaderGroups.forEach((shaderGroup) =>
   {
     drawObjectsInShaderGroup(gl, shaderGroup, this.drawingMethod, camera);
   });

@@ -1,4 +1,4 @@
-import { ImageProperties } from "./imageProperties.js";
+import { ImagePropertyPool } from "./imagePropertyPool.js";
 import { convertStringToGLEnumID, getGLEnumArraysFromStringArrays, getGLEnumArrayFromStringArray } from "./glStringToEnumID.js";
 import { createAndGetTexture } from "./glUtility.js";
 import { ActionEvent } from "./actionEvent.js";
@@ -9,73 +9,48 @@ var defaultBindingType = "TEXTURE_2D";
 export function TextureHolder()
 {
   this.glTexture = null;
-  this.imageProperties = [];
-  this.unloadedImageProperties = [];
   this.glTexParameteris = [];
   this.glBindingType = null;
   this.setBindingTypeAndParameteris = setBindingTypeAndParameteris.bind(this);
-  this.isEverythingLoaded = isEverythingLoaded.bind(this);
-  this.addImage = addImage.bind(this);
-  this.setBindingTypeAndParameteris(defaultBindingType, getDefaultParameteris());
+  this.isCurrentlyLoading = false;
+  this.setTextureByImageLocation = setTextureByImageLocation.bind(this);
+  this.setTextureByImageLocations = setTextureByImageLocations.bind(this);
+
   this.onTextureCreated = new ActionEvent();
   this.setTextureAsActive = setTextureAsActive.bind(this);
+
+  this.setBindingTypeAndParameteris(defaultBindingType, getDefaultParameteris());
 }
 
 function setTextureAsActive(gl)
 {
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(this.glBindingType, this.glTexture);
+
 }
 
-function addImage(imageLocation, texImage2DParameters)
+async function setTextureByImageLocation(imageLocation, texImage2DParameters)
 {
-  var imageProperty = new ImageProperties(imageLocation, texImage2DParameters);
-  imageProperty.onImageLoaded.addEventListener(onImagePropertyLoaded.bind(this));
-  this.unloadedImageProperties.push(imageProperty);
+  var imagePropertyPool = new ImagePropertyPool();
+  imagePropertyPool.setImageProperty(imageLocation, texImage2DParameters);
+  imagePropertyPool.onImagePropertiesLoaded.addEventListener(createTexture.bind(this));
+  this.isCurrentlyLoading = true;
 }
 
-function onImagePropertyLoaded(loadedProperty)
+async function setTextureByImageLocations(imageLocationsWithParameters)
 {
-  var isFound = false;
-  var i = 0;
-  var size = this.unloadedImageProperties.length;
-  while(i<=size&&!isFound)
-  {
-    if (loadedProperty==this.unloadedImageProperties[i])
-    {
-      this.imageProperties.push(this.unloadedImageProperties[i]);
-      this.unloadedImageProperties.splice(i,1);
-      isFound = true;
-    }
-    i++;
-  }
-  tryCreatingTexture.bind(this).call();
+  var imagePropertyPool = new ImagePropertyPool();
+  console.log(imageLocationsWithParameters);
+  imagePropertyPool.setImageProperties(imageLocationsWithParameters);
+  imagePropertyPool.onImagePropertiesLoaded.addEventListener(createTexture.bind(this));
+  this.isCurrentlyLoading = true;
 }
 
-function tryCreatingTexture()
+function createTexture(imagePropertyPool)
 {
-
-  var size = this.unloadedImageProperties.length;
-  if(size==0)
-  {
-    console.log(this.imageProperties);
-    this.glTexture = createAndGetTexture(this);
-    this.onTextureCreated.invoke();
-  }
-}
-
-function isEverythingLoaded()
-{
-  var areImagesLoaded = this.unloadedImageProperties.length==0;
-  var isTextureCreated = this.glTexture!=null;
-  if (this.imageProperties.length>0||this.unloadedImageProperties.length>0)
-  {
-    return areImagesLoaded&&isTextureCreated;
-  }
-  else
-  {
-    return true;
-  }
+  this.isCurrentlyLoading = false;
+  this.glTexture = createAndGetTexture(imagePropertyPool.loadedImageProperties, this.glBindingType, this.glTexParameteris);
+  this.onTextureCreated.invoke();
 }
 
 function setBindingTypeAndParameteris(stringBindingType, stringParameteris){

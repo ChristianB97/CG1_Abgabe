@@ -10,7 +10,6 @@ export function Camera(gl, isDefaultFrameBuffer)
   this.viewMatrix = new Transform();
   this.uniformPool = new UniformPool();
   this.frameBuffer = new FrameBuffer(gl, isDefaultFrameBuffer);
-  console.log(this.frameBuffer);
 
   this.translateCamera = translateCamera.bind(this);
   this.rotateCamera = rotateCamera.bind(this);

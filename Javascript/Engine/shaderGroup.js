@@ -1,7 +1,11 @@
-export function ShaderGroup(vertexShaderName, fragmentShaderName)
+import { getTextByCallback } from "./objFileLoader.js";
+import { ActionEvent } from "./actionEvent.js";
+import { createAndGetProgram } from "./glUtility.js";
+import { ShaderContainer } from "./shaderContainer.js";
+
+export function ShaderGroup(vertexShaderLocation, fragmentShaderLocation)
 {
-  this.fragmentShaderName = fragmentShaderName;
-  this.vertexShaderName = vertexShaderName;
+  this.shaderContainer = new ShaderContainer(vertexShaderLocation, fragmentShaderLocation);
   this.areSameShadersUsed = areSameShadersUsed.bind(this);
 
   this.renderers = [];
@@ -9,9 +13,23 @@ export function ShaderGroup(vertexShaderName, fragmentShaderName)
   this.addRenderer = addRenderer.bind(this);
 
   this.program = null;
+  this.loadProgram = loadProgram.bind(this);
   this.isProgramReady = function(){ return this.program != null; }
+  this.onProgramReady = new ActionEvent();
 
-  this.getMeshRenderers = function() { return this.meshRenderers; };
+
+}
+function loadProgram()
+{
+  this.shaderContainer.onDataLoaded.addEventListener(tryCreatingProgram.bind(this));
+  this.shaderContainer.loadShader();
+}
+
+function tryCreatingProgram(){
+  if (this.program==null){
+    this.program = createAndGetProgram(this.shaderContainer.loadedVertexShader, this.shaderContainer.loadedFragmentShader);
+    this.onProgramReady.invoke(this);
+  }
 }
 
 function addRenderer(renderer)
@@ -26,7 +44,7 @@ function addRenderer(renderer)
 
 function areSameShadersUsed(vertexShaderName, fragmentShaderName)
 {
-  var isVertexShaderTheSame = this.vertexShaderName == vertexShaderName;
-  var isFragmentShaderTheSame = this.fragmentShaderName == fragmentShaderName;
+  var isVertexShaderTheSame = this.shaderContainer.vertexShaderLocation == vertexShaderName;
+  var isFragmentShaderTheSame = this.shaderContainer.fragmentShaderLocation == fragmentShaderName;
   return isVertexShaderTheSame&&isFragmentShaderTheSame;
 }

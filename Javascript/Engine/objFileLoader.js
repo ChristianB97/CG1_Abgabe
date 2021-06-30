@@ -1,4 +1,4 @@
-import { ObjectData } from "./objectData.js";
+//import { ObjectData } from "./objectData.js";
 
 export async function convertOBJToVerticesData(objFileName, callback)
 {
@@ -61,4 +61,10 @@ export async function getTextOfFile(fileLocation)
 {
   var promise = await getResponse(fileLocation);
   return promise.text().then();
+}
+
+export async function getTextByCallback(fileLocation, callback)
+{
+  var text = await getTextOfFile(fileLocation);
+  callback(text);
 }
