@@ -8,7 +8,7 @@ var defaultBindingType = "TEXTURE_2D";
 
 export function TextureHolder()
 {
-  this.glTexture = null;
+  this.glTextures = [];
   this.glTexParameteris = [];
   this.glBindingType = null;
   this.setBindingTypeAndParameteris = setBindingTypeAndParameteris.bind(this);
@@ -24,9 +24,10 @@ export function TextureHolder()
 
 function setTextureAsActive(gl)
 {
-  gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(this.glBindingType, this.glTexture);
-
+  this.glTextures.forEach((glTexture, i) => {
+    gl.activeTexture(gl.TEXTURE0+i);
+    gl.bindTexture(this.glBindingType, glTexture);
+  });
 }
 
 async function setTextureByImageLocation(imageLocation, texImage2DParameters)
@@ -40,7 +41,6 @@ async function setTextureByImageLocation(imageLocation, texImage2DParameters)
 async function setTextureByImageLocations(imageLocationsWithParameters)
 {
   var imagePropertyPool = new ImagePropertyPool();
-  console.log(imageLocationsWithParameters);
   imagePropertyPool.setImageProperties(imageLocationsWithParameters);
   imagePropertyPool.onImagePropertiesLoaded.addEventListener(createTexture.bind(this));
   this.isCurrentlyLoading = true;
@@ -49,7 +49,7 @@ async function setTextureByImageLocations(imageLocationsWithParameters)
 function createTexture(imagePropertyPool)
 {
   this.isCurrentlyLoading = false;
-  this.glTexture = createAndGetTexture(imagePropertyPool.loadedImageProperties, this.glBindingType, this.glTexParameteris);
+  this.glTextures.push(createAndGetTexture(imagePropertyPool.loadedImageProperties, this.glBindingType, this.glTexParameteris));
   this.onTextureCreated.invoke();
 }
 

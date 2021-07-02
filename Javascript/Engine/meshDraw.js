@@ -1,4 +1,4 @@
-export function MeshDraw(textureSetter, shaderContainer, vboTriangleCount)
+export function MeshDraw(textureSetter, shaderContainer)
 {
   this.textureSetter = textureSetter;
   this.draw = function(){};

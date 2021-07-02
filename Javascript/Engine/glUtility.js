@@ -9,7 +9,6 @@ export function tryInitiatingGL(canvas)
 {
   if (gl==null)
   {
-    console.log("gl");
     gl = canvas.getContext("webgl2", { alpha: false });
 
     if (!gl)
@@ -79,4 +78,9 @@ export function createAndGetTexture(imageProperties, glBindingType, glParameters
     }
   }
   return glTexture;
+}
+
+export function createAndGetEmptyTexture(textureHeight, textureWidth)
+{
+
 }

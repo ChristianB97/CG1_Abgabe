@@ -10,7 +10,7 @@ export function RenderPath(canvas, isDefaultFrameBuffer)
 {
     this.environment3D = new ObjectEnvironment();
     this.canvas2D = new ObjectEnvironment();
-    this.transparencyLayer = new TransparencyLayer;
+    this.transparencyLayer = new TransparencyLayer();
     this.gl = tryInitiatingGL(canvas);
     this.camera = new Camera(this.gl, isDefaultFrameBuffer);
 

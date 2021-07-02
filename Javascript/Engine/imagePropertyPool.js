@@ -21,7 +21,6 @@ async function setImageProperty(imageLocation, parameters)
 async function setImageProperties(imageLocationsWithParameters)
 {
   var currentImageProperties = [];
-  console.log(imageLocationsWithParameters);
   for (var i = 0; i<imageLocationsWithParameters.length; i++) {
 
     var imageProperty = new ImageProperties(imageLocationsWithParameters[i][0], imageLocationsWithParameters[i][1]);

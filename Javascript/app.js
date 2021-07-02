@@ -46,7 +46,7 @@ var InitDemo = async function()
 
   var suzanne = new WebObject();
 
-  suzanne.addMeshRendererAndTransform("OBJ/luffy.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
+  suzanne.addMeshRendererAndTransform("OBJ/suzanne.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
 
   var suzanneMeshRenderer = suzanne.getComponent("MeshRenderer");
   suzanneMeshRenderer.textureHolder.setTextureByImageLocation("Textures/boot.png");
@@ -54,12 +54,11 @@ var InitDemo = async function()
   renderPath.environment3D.addObject(suzanne);
 
   var teapot1 = new WebObject();
-  teapot1.addMeshRendererAndTransform("OBJ/witcha.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderDefault.glsl");
+  teapot1.addMeshRendererAndTransform("OBJ/teapot.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderDefault.glsl");
 
   var teapotMeshRenderer1 = teapot1.getComponent("MeshRenderer");
   teapotMeshRenderer1.textureHolder.setTextureByImageLocation("Textures/boot.png");
   teapot1.getComponent("Transform").translate([3,0,0]);
-  teapot1.getComponent("Transform").scale([10,10,10]);
   renderPath.transparencyLayer.addObject(teapot1);
 
   var teapot = new WebObject();

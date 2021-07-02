@@ -24,6 +24,7 @@ function addRenderer(renderer)
 {
   if (renderer.isDataLoaded()){
     this.renderers.push(renderer);
+    console.log(this.renderers);
   }
   else{
     renderer.onDataLoaded.addEventListener(addRenderer.bind(this));

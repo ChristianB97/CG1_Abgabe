@@ -17,7 +17,6 @@ function registerMeshRenderer(renderer)
     if (i<this.loadedShaderGroups.length)
     {
       let isSuccessful = addRendererIfShadersMatchingWithShaderGroup(this.loadedShaderGroups[i], renderer);
-      foundGroup = isSuccessful;
     }
     if (i<this.unloadedShaderGroups.length){
       let isSuccessful = addRendererIfShadersMatchingWithShaderGroup(this.unloadedShaderGroups[i], renderer);
@@ -32,7 +31,7 @@ function registerMeshRenderer(renderer)
 }
 
 function addRendererIfShadersMatchingWithShaderGroup(shaderGroup, renderer){
-  if (shaderGroup.programContainer.areSameShadersUsed(renderer.shaderContainer.vertexShader, renderer.shaderContainer.fragmentShader))
+  if (shaderGroup.programContainer.areSameShadersUsed(renderer.shaderContainer.vertexShaderLocation, renderer.shaderContainer.fragmentShaderLocation))
   {
     shaderGroup.addRenderer(renderer);
     return true;
@@ -50,7 +49,6 @@ function createShaderGroup(renderer)
 }
 
 function pushShaderGroupToLoadedList(loadedShaderGroup){
-  console.log(loadedShaderGroup);
   this.loadedShaderGroups.push(loadedShaderGroup);
   this.unloadedShaderGroups.forEach((unloadedShaderGroup, i) => {
     if (loadedShaderGroup==unloadedShaderGroup)

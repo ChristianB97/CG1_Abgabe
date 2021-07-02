@@ -1,15 +1,23 @@
-import ShaderContainer from "shaderContainer.js";
-import createAndGetProgram from "glUtility.js";
+import { ShaderContainer } from "./shaderContainer.js";
+import { createAndGetProgram } from "./glUtility.js";
+import { TextureHolder } from "./textureHolder.js";
 
-export function TextureDraw(vertexShaderLocation, fragmentShaderLocation){
-  this.inputTextures = [];
-  this.outputTexture = null;
+export function TextureDraw(inputTexture, outputTextures, vertexShaderLocation, fragmentShaderLocation){
+  this.inputTextures = inputTexture;
+  this.outputTextures = outputTextures;
   this.shaderContainer = new ShaderContainer(vertexShaderLocation, fragmentShaderLocation);
-  this.program = null;
+  this.textureHolder = new TextureHolder();
   this.draw = function() {};
 
   shaderContainer.onDataLoaded.addEventListener(setProgramAndAllowDrawing.bind(this));
   shaderContainer.loadShader();
+}
+
+function setUpTextureHolder(){
+  this.textureHolder.glTextures.push(this.inputTexture);
+  this.outputTextures.forEach((outputTexture) => {
+    this.textureHolder.glTexture.push(outputTexture);
+  });
 }
 
 function setProgramAndAllowDrawing()
@@ -18,7 +26,8 @@ function setProgramAndAllowDrawing()
   this.draw = draw.bind(this);
 }
 
-function draw(gl, program)
+function draw(gl)
 {
-  
+  gl.useProgram(this.program);
+  this.glTexture.setTextureAsActive();
 }
