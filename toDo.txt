@@ -4,20 +4,14 @@
 
 ++
 - Transparenz!
-- Nebel!                                                                  - planned
+- Nebel!                                                                  - 80%
 - Nebel in komplexer Szene!                                               - planned?
 - Umgebungstexturspieglung!
 - gleichzeitige Verwendung von mindestens zwei Texturen in einem Objekt!
 
 +
-- Default-Texture-Settings                                                - planned
-- modular frame buffer                                                    - planned
 - Kamerarotation durch drag                                               - Ansatz
-- material-Dateien lesen
-- objekte aufteilen für verschiedene Materialien                          - planned
-- Portal mit Stencil
 - Verwendung einer Videotextur
-- ui voll funktionsfähig
 
 Road to Endabgabe
 Donnerstag: Bloom, UIPostProcessing, Preload

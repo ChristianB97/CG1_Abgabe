@@ -34,6 +34,6 @@ function setFragmentShader(_loadedFragmentShader){
 function tryInvokingOnDataLoaded(){
   if (this.loadedVertexShader!=null&&this.loadedFragmentShader!=null)
   {
-    this.onDataLoaded.invoke();
+    this.onDataLoaded.invoke(this);
   }
 }

@@ -1,35 +1,23 @@
 import { getTextByCallback } from "./objFileLoader.js";
 import { ActionEvent } from "./actionEvent.js";
 import { createAndGetProgram } from "./glUtility.js";
-import { ShaderContainer } from "./shaderContainer.js";
+import { ProgramContainer } from "./programContainer.js";
 
 export function ShaderGroup(vertexShaderLocation, fragmentShaderLocation)
 {
-  this.shaderContainer = new ShaderContainer(vertexShaderLocation, fragmentShaderLocation);
-  this.areSameShadersUsed = areSameShadersUsed.bind(this);
-
+  this.programContainer = new ProgramContainer(vertexShaderLocation, fragmentShaderLocation);
   this.renderers = [];
   this.unfinishedRenderers = [];
   this.addRenderer = addRenderer.bind(this);
 
-  this.program = null;
-  this.loadProgram = loadProgram.bind(this);
-  this.isProgramReady = function(){ return this.program != null; }
-  this.onProgramReady = new ActionEvent();
+  this.programContainer.loadProgram();
+  this.onShaderGroupReady = new ActionEvent();
 
-
-}
-function loadProgram()
-{
-  this.shaderContainer.onDataLoaded.addEventListener(tryCreatingProgram.bind(this));
-  this.shaderContainer.loadShader();
+  this.programContainer.onProgramCreated.addEventListener(invokeOnShaderGroupReady.bind(this));
 }
 
-function tryCreatingProgram(){
-  if (this.program==null){
-    this.program = createAndGetProgram(this.shaderContainer.loadedVertexShader, this.shaderContainer.loadedFragmentShader);
-    this.onProgramReady.invoke(this);
-  }
+function invokeOnShaderGroupReady(){
+  this.onShaderGroupReady.invoke(this);
 }
 
 function addRenderer(renderer)
@@ -40,11 +28,4 @@ function addRenderer(renderer)
   else{
     renderer.onDataLoaded.addEventListener(addRenderer.bind(this));
   }
-}
-
-function areSameShadersUsed(vertexShaderName, fragmentShaderName)
-{
-  var isVertexShaderTheSame = this.shaderContainer.vertexShaderLocation == vertexShaderName;
-  var isFragmentShaderTheSame = this.shaderContainer.fragmentShaderLocation == fragmentShaderName;
-  return isVertexShaderTheSame&&isFragmentShaderTheSame;
 }

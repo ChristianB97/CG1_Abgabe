@@ -20,11 +20,8 @@ function drawObjects(gl, camera)
 }
 
 function drawObjectsInShaderGroup(gl, shaderGroup, draw, camera){
-  if (shaderGroup.isProgramReady())
-  {
-    gl.useProgram(shaderGroup.program);
-    shaderGroup.renderers.forEach((renderer, i) => {
-      renderer.meshDraw.draw(gl, shaderGroup.program, camera.uniformPool);
-    });
-  }
+  gl.useProgram(shaderGroup.programContainer.program);
+  shaderGroup.renderers.forEach((renderer, i) => {
+    renderer.meshDraw.draw(gl, shaderGroup.programContainer.program, camera.uniformPool);
+  });
 }
