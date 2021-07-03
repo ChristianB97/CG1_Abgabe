@@ -15,9 +15,8 @@ export function RectTransform(canvasWidth, canvasHeight)
 
 function setPropertiesFromMeshRenderer(meshRenderer)
 {
-  var image = meshRenderer.textureHolder.imageProperties[0].image;
-  this.imageWidth = image.width;
-  this.imageHeight = image.height;
+  this.imageWidth = meshRenderer.textureHolder.sizeOfLastTexture[1];
+  this.imageHeight = meshRenderer.textureHolder.sizeOfLastTexture[0];
   this.obj = meshRenderer.objectData;
   initRectTransform.call(this);
 }

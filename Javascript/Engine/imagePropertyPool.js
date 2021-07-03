@@ -7,7 +7,7 @@ export function ImagePropertyPool()
   this.unloadedImageProperties = [];
   this.setImageProperty = setImageProperty.bind(this);
   this.setImageProperties = setImageProperties.bind(this);
-
+  this.lastImageSize = [0,0];
   this.onImagePropertiesLoaded = new ActionEvent();
 }
 
@@ -34,6 +34,7 @@ async function setImageProperties(imageLocationsWithParameters)
 
 function addToLoadedProperties(loadedImageProperty)
 {
+  this.lastImageSize=[loadedImageProperty.image.height, loadedImageProperty.image.width];
   this.loadedImageProperties.push(loadedImageProperty);
   this.unloadedImageProperties.forEach((unloadedImageProperty, i) => {
     if (loadedImageProperty==unloadedImageProperty){

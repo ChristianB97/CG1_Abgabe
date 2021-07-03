@@ -33,7 +33,7 @@ function addObject(webObject)
 
 function enableServerSideCapabilities(gl)
 {
-  gl.disable(gl.DEPTH_TEST);
+  //gl.disable(gl.DEPTH_TEST);
   gl.depthMask(gl.FALSE);
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);

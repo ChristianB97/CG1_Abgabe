@@ -27,6 +27,7 @@ vec3 getLight()
 void main()
 {
   vec3 fragNormal = normalize(fragNormal);
-  vec4 texel = texture2D(sampler, fragTexCoord);
+  vec2 flippedTexCoord = vec2(fragTexCoord.x,1.0-fragTexCoord.y);
+  vec4 texel = texture2D(sampler, flippedTexCoord);
   gl_FragColor = vec4(texel.rgb + getLight(), texel.a);
 }

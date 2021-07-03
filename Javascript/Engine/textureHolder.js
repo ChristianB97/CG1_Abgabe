@@ -9,6 +9,7 @@ var defaultBindingType = "TEXTURE_2D";
 export function TextureHolder()
 {
   this.glTextures = [];
+  this.sizeOfLastTexture = [0,0];
   this.glTexParameteris = [];
   this.glBindingType = null;
   this.setBindingTypeAndParameteris = setBindingTypeAndParameteris.bind(this);
@@ -24,7 +25,9 @@ export function TextureHolder()
 
 function setTextureAsActive(gl)
 {
+  gl.bindTexture(this.glBindingType, null);
   this.glTextures.forEach((glTexture, i) => {
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
     gl.activeTexture(gl.TEXTURE0+i);
     gl.bindTexture(this.glBindingType, glTexture);
   });
@@ -48,6 +51,7 @@ async function setTextureByImageLocations(imageLocationsWithParameters)
 
 function createTexture(imagePropertyPool)
 {
+  this.sizeOfLastTexture=imagePropertyPool.lastImageSize;
   this.isCurrentlyLoading = false;
   this.glTextures.push(createAndGetTexture(imagePropertyPool.loadedImageProperties, this.glBindingType, this.glTexParameteris));
   this.onTextureCreated.invoke();
@@ -63,8 +67,8 @@ function getDefaultParameteris(){
   return [
     ["TEXTURE_WRAP_S",      "REPEAT"],
     ["TEXTURE_WRAP_T",      "REPEAT"],
-    ["TEXTURE_MIN_FILTER",  "NEAREST"],
-    ["TEXTURE_MAG_FILTER",  "NEAREST"]
+    ["TEXTURE_MIN_FILTER",  "LINEAR"],
+    ["TEXTURE_MAG_FILTER",  "LINEAR"]
   ];
 }
 

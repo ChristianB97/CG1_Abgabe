@@ -18,7 +18,7 @@ export function Camera(gl, isDefaultFrameBuffer)
 }
 
 function initCamera(canvas){
-  glMatrix.mat4.lookAt(this.viewMatrix.matrix, [0, 0, -15], [0, 0, 0], [0, 1, 0]);
+  glMatrix.mat4.lookAt(this.viewMatrix.matrix, [0, 0, 0], [0, 0, 0], [0, 1, 0]);
   glMatrix.mat4.perspective(this.projectionMatrix.matrix, glMatrix.glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 1000);
 
   this.uniformPool.createAndSetMatrix4fv("mWorld", this.worldMatrix.matrix);
@@ -28,7 +28,7 @@ function initCamera(canvas){
 
 function translateCamera(vec3Translate)
 {
-  vec3Translate = [vec3Translate[0],vec3Translate[1],vec3Translate[2]*(-1)]
+  vec3Translate = [vec3Translate[0],vec3Translate[1]*(-1),vec3Translate[2]]
   this.worldMatrix.translate(vec3Translate);
 }
 

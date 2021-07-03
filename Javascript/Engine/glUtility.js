@@ -61,7 +61,6 @@ function setShader(prog, shaderText, glShaderIdentifier)
 
 export function createAndGetTexture(imageProperties, glBindingType, glParameters)
 {
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
   let glTexture = gl.createTexture();
 
   gl.bindTexture(glBindingType, glTexture);

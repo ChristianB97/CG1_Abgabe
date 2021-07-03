@@ -1,9 +1,12 @@
 export function FrameBuffer(gl, isDefault)
 {
+  console.log("outside: " +  isDefault);
   if (isDefault===true){
+    console.log("inside: " + isDefault);
     this.frameBuffer = null;
   }
   else{
+    console.log("inside2: " + isDefault);
     this.frameBuffer = gl.createFramebuffer();
     this.depthBuffer = gl.createRenderbuffer();
 

@@ -8,20 +8,32 @@ import { update, deltaTime } from "./Engine/updateLoop.js";
 import { horizontalAxis, verticalAxis, verticalMouseSpeed, horizontalMouseSpeed, isMouseDown, setDragField } from "./Engine/inputManager.js";
 
 var renderPath;
+var emperorPath;
 
 var InitDemo = async function()
 {
   var canvas = document.getElementById("game-surface");
-  var defaultRenderPath = new RenderPath(canvas, false);
-  renderPath = new RenderPath(canvas, true);
+  var defaultRenderPath = new RenderPath(canvas, true);
+  renderPath = new RenderPath(canvas, false);
+  emperorPath = new RenderPath(canvas, false);
+  emperorPath.camera.translateCamera([0,-0.6,0]);
+  emperorPath.camera.rotateCamera(1*Math.PI,[0,1,0]);
+
 
   var screenObject = new WebObject();
   screenObject.addUIRendererAndRectTransform(canvas);
-  screenObject.getComponent("MeshRenderer").textureHolder.glTexture = renderPath.camera.frameBuffer.frameBufferTextureDefault;
+  screenObject.getComponent("MeshRenderer").textureHolder.glTextures.push(renderPath.camera.frameBuffer.frameBufferTextureDefault);
   defaultRenderPath.canvas2D.addObject(screenObject);
 
   update.addEventListener(move);
 
+  var ufo = new WebObject();
+  ufo.addMeshRendererAndTransform("OBJ/ufo_unterteller.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
+  var ufoRenderer = ufo.getComponent("MeshRenderer");
+  ufo.getComponent("Transform").translate([0,0,-20]);
+  ufo.getComponent("Transform").scale([0.1,0.1,0.1]);
+  ufoRenderer.textureHolder.setTextureByImageLocation("Textures/ufo_diffuse.png");
+  renderPath.environment3D.addObject(ufo);
 
   var box2 = new WebObject();
   box2.addMeshRendererAndTransform("OBJ/box.obj", "Shader/vertexShaderSkyBox.glsl", "Shader/fragmentShaderSkyBox.glsl");
@@ -36,38 +48,36 @@ var InitDemo = async function()
     ["TEXTURE_MAG_FILTER",        "NEAREST"]]
   );
   boxMeshRenderer2.textureHolder.setTextureByImageLocations(
-  [["Skybox/right.jpg", ["TEXTURE_CUBE_MAP_POSITIVE_X", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
-  ["Skybox/left.jpg", ["TEXTURE_CUBE_MAP_NEGATIVE_X", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
-  ["Skybox/top.jpg", ["TEXTURE_CUBE_MAP_POSITIVE_Y", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
-  ["Skybox/bottom.jpg", ["TEXTURE_CUBE_MAP_NEGATIVE_Y", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
-  ["Skybox/front.jpg", ["TEXTURE_CUBE_MAP_POSITIVE_Z", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
-  ["Skybox/back.jpg", ["TEXTURE_CUBE_MAP_NEGATIVE_Z", "RGBA", "RGBA", "UNSIGNED_BYTE"]]]);
+  [["Skybox/Nebula_light_left.png", ["TEXTURE_CUBE_MAP_POSITIVE_X", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
+  ["Skybox/Nebula_light_right.png", ["TEXTURE_CUBE_MAP_NEGATIVE_X", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
+  ["Skybox/Nebula_light_up.png", ["TEXTURE_CUBE_MAP_POSITIVE_Y", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
+  ["Skybox/Nebula_light_down.png", ["TEXTURE_CUBE_MAP_NEGATIVE_Y", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
+  ["Skybox/Nebula_light_front.png", ["TEXTURE_CUBE_MAP_POSITIVE_Z", "RGBA", "RGBA", "UNSIGNED_BYTE"]],
+  ["Skybox/Nebula_light_back.png", ["TEXTURE_CUBE_MAP_NEGATIVE_Z", "RGBA", "RGBA", "UNSIGNED_BYTE"]]]);
   renderPath.environment3D.addObject(box2);
 
-  var suzanne = new WebObject();
+  var ufo = new WebObject();
 
-  suzanne.addMeshRendererAndTransform("OBJ/suzanne.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
+  ufo.addMeshRendererAndTransform("OBJ/ufo.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderDefault.glsl");
+  var ufoRenderer = ufo.getComponent("MeshRenderer");
+  ufo.getComponent("Transform").translate([0,0,-0]);
+  ufoRenderer.textureHolder.setTextureByImageLocation("Textures/jj_ufo.jpg");
+  renderPath.environment3D.addObject(ufo);
 
-  var suzanneMeshRenderer = suzanne.getComponent("MeshRenderer");
-  suzanneMeshRenderer.textureHolder.setTextureByImageLocation("Textures/boot.png");
-  suzanne.getComponent("Transform").translate([0,-3,-3]);
-  renderPath.environment3D.addObject(suzanne);
+  var ufoGlass = new WebObject();
+  ufoGlass.addMeshRendererAndTransform("OBJ/ufoGlass.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderDefault.glsl");
+  var ufoGlassRenderer = ufoGlass.getComponent("MeshRenderer");
+  ufoGlass.getComponent("Transform").translate([0,0,-0]);
+  ufoGlassRenderer.textureHolder.setTextureByImageLocation("Textures/jojo.jfif");
+  renderPath.transparencyLayer.addObject(ufoGlass);
+
+  var ufoPortal = new WebObject();
+  ufoPortal.addMeshRendererAndTransform("OBJ/ufoPortal.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderDefault.glsl");
+  ufoPortal.getComponent("MeshRenderer").textureHolder.glTextures.push(emperorPath.camera.frameBuffer.frameBufferTextureDefault);
+  renderPath.environment3D.addObject(ufoPortal);
 
   var teapot1 = new WebObject();
   teapot1.addMeshRendererAndTransform("OBJ/teapot.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderDefault.glsl");
-
-  var teapotMeshRenderer1 = teapot1.getComponent("MeshRenderer");
-  teapotMeshRenderer1.textureHolder.setTextureByImageLocation("Textures/boot.png");
-  teapot1.getComponent("Transform").translate([3,0,0]);
-  renderPath.transparencyLayer.addObject(teapot1);
-
-  var teapot = new WebObject();
-  teapot.addMeshRendererAndTransform("OBJ/teapot.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderDefault.glsl");
-
-  var teapotMeshRenderer = teapot.getComponent("MeshRenderer");
-  teapotMeshRenderer.textureHolder.setTextureByImageLocation("Textures/blattmuster.jpg");
-  teapot.getComponent("Transform").translate([6,0,0]);
-  renderPath.transparencyLayer.addObject(teapot);
 
 
 
@@ -77,7 +87,7 @@ var InitDemo = async function()
   girl.addMeshRendererAndTransform("OBJ/amelia.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
   girl.getComponent("Transform").translate([0,-4,0])
   girl.getComponent("Transform").scale([0.04,0.04,0.04])
-  girl.getComponent("MeshRenderer").textureHolder.setTextureByImageLocation("Textures/crate.png");
+  girl.getComponent("MeshRenderer").textureHolder.setTextureByImageLocation("Textures/amelia.png");
   girl.getComponent("Transform").translate([0,-9,0]);
   girl.getComponent("Transform").scale([8,8,8]);
   renderPath.environment3D.addObject(girl);
@@ -85,13 +95,37 @@ var InitDemo = async function()
   setDragField(document.getElementById("game-surface"));
 
 
-  //var myFirstUI = new WebObject();
-  //myFirstUI.addUIRendererAndRectTransform(canvas, "Textures/jojo.jfif", 0.3, "Shader/vertexShaderUI.glsl", "Shader/fragmentShaderUI.glsl");
-  //renderPath.canvas2D.addObject(myFirstUI);
-  //var uiRect = myFirstUI.getComponent("RectTransform");
+  var myFirstUI = new WebObject();
+  myFirstUI.addUIRendererAndRectTransform(canvas, "Textures/jojo.jfif", 0.3, "Shader/vertexShaderUI.glsl", "Shader/fragmentShaderUI.glsl");
+  renderPath.canvas2D.addObject(myFirstUI);
+  var uiRect = myFirstUI.getComponent("RectTransform");
 
-  //uiRect.scale([0.4,0.4]);
-  //uiRect.setPosition([0,0.79]);
+  uiRect.scale([0.4,0.4]);
+  uiRect.setPosition([0,0.79]);
+
+  var roofGround = new WebObject();
+  roofGround.addMeshRendererAndTransform("OBJ/throne_roof_ground.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
+  var roofGroundRenderer = roofGround.getComponent("MeshRenderer");
+  roofGround.getComponent("Transform").translate([0,-1,0]);
+  roofGround.getComponent("Transform").scale([0.1,0.1,0.1]);
+  roofGroundRenderer.textureHolder.setTextureByImageLocation("Textures/ground_roof.jpg");
+  emperorPath.environment3D.addObject(roofGround);
+
+  var walls = new WebObject();
+  walls.addMeshRendererAndTransform("OBJ/throne_walls.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
+  var wallsRenderer = walls.getComponent("MeshRenderer");
+  walls.getComponent("Transform").translate([0,-1,0]);
+  walls.getComponent("Transform").scale([0.1,0.1,0.1]);
+  wallsRenderer.textureHolder.setTextureByImageLocation("Textures/ground_roof.jpg");
+  emperorPath.environment3D.addObject(walls);
+
+  var throne = new WebObject();
+  throne.addMeshRendererAndTransform("OBJ/throne_throne.obj", "Shader/vertexShaderDefault.glsl", "Shader/fragmentShaderLight.glsl");
+  var throneRenderer = throne.getComponent("MeshRenderer");
+  throne.getComponent("Transform").translate([0,-1,0]);
+  throne.getComponent("Transform").scale([0.1,0.1,0.1]);
+  throneRenderer.textureHolder.setTextureByImageLocation("Textures/throne.jpg");
+  emperorPath.environment3D.addObject(throne);
 
 
 
@@ -123,8 +157,9 @@ function move()
   renderPath.camera.translateCamera([horizontalAxis*speed,0,verticalAxis*speed]);
   if (isMouseDown)
   {
-    var vec3= [verticalMouseSpeed, -horizontalMouseSpeed, 0];
+    var vec3= [0, -horizontalMouseSpeed, 0];
     renderPath.camera.rotateCamera(angle,vec3);
+    emperorPath.camera.rotateCamera(angle,vec3);
   }
 
 }

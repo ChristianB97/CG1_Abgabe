@@ -31,7 +31,7 @@ function create2DObjectComponents(canvas, image, drawingOrder, vertexShader, fra
     var meshRenderer = this.components[MeshRenderer.name] = new MeshRenderer("OBJ/mirror.obj", null, vertexShader, fragmentShader);
     var rectTransform = this.components[RectTransform.name] = new RectTransform(canvas.width, canvas.height);
     if (image!=null){
-      meshRenderer.textureHolder.addImage(image);
+      meshRenderer.textureHolder.setTextureByImageLocation(image);
       meshRenderer.onDataLoaded.addEventListener(rectTransform.setPropertiesCallback);
     }
 
