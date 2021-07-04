@@ -1,7 +1,7 @@
 # Blender MTL File: 'throne_room.blend'
-# Material Count: 2
+# Material Count: 1
 
-newmtl Material.001
+newmtl Material.002
 Ns 225.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -10,15 +10,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd f9953f7e2ae17f203b0d621a7df311e3.jpg
-
-newmtl Material.005
-Ns 225.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 2
-map_Kd f9953f7e2ae17f203b0d621a7df311e3.jpg
+map_Kd elegance-red-color-carpet-texture-background_49683-2145.jpg
