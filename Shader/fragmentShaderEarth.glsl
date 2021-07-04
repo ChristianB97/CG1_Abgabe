@@ -15,7 +15,8 @@ varying vec3 fragPosition;
 varying vec2 fragTexCoord;
 varying vec3 fragNormal;
 varying vec3 fragViewNormal;
-uniform sampler2D sampler;
+uniform sampler2D sampler[3];
+uniform float runner;
 
 
 
@@ -51,7 +52,12 @@ vec3 getLight()
 void main()
 {
   vec3 fragNormal = normalize(fragNormal);
-  vec2 flippedTexCoord = vec2(fragTexCoord.x,1.0-fragTexCoord.y);
-  vec4 texel = texture2D(sampler, flippedTexCoord);
-  gl_FragColor = vec4(texel.rgb + getLight(), texel.a);
+  vec2 flippedTexCoord = vec2(fragTexCoord.x + runner,1.0-fragTexCoord.y);
+  vec3 light = getLight();
+  float lightAverage = (light.x + light.y + light.z) / 3.0;
+  vec4 earthNightColor  = texture2D(sampler[1], flippedTexCoord);
+  vec4 earthDayColor    = texture2D(sampler[0], flippedTexCoord);
+
+  //vec4 finalColor = mix(color1, color2, 0.0);
+  gl_FragColor = earthNightColor;
 }

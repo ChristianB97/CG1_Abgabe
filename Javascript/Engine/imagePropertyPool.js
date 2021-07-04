@@ -1,7 +1,7 @@
 import { ActionEvent } from "./actionEvent.js";
 import { ImageProperties } from "./imageProperties.js";
 
-export function ImagePropertyPool()
+export function ImagePropertyPool(position)
 {
   this.loadedImageProperties = [];
   this.unloadedImageProperties = [];
@@ -9,6 +9,7 @@ export function ImagePropertyPool()
   this.setImageProperties = setImageProperties.bind(this);
   this.lastImageSize = [0,0];
   this.onImagePropertiesLoaded = new ActionEvent();
+  this.position = position;
 }
 
 async function setImageProperty(imageLocation, parameters)

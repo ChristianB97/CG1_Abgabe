@@ -28,6 +28,7 @@ function getTranslation()
 }
 
 function resetTranslation(){
+
   this.matrix[12] = 0;
   this.matrix[13] = 0;
   this.matrix[14] = 0;

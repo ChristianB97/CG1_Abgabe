@@ -13,6 +13,7 @@ export function Camera(gl, isDefaultFrameBuffer)
 
   this.translateCamera = translateCamera.bind(this);
   this.rotateCamera = rotateCamera.bind(this);
+  this.setSizeInPerspectiveMatrix = setSizeInPerspectiveMatrix.bind(this);
 
   initCamera.call(this, gl.canvas);
 }
@@ -24,6 +25,11 @@ function initCamera(canvas){
   this.uniformPool.createAndSetMatrix4fv("mWorld", this.worldMatrix.matrix);
   this.uniformPool.createAndSetMatrix4fv("mProj", this.projectionMatrix.matrix);
   this.uniformPool.createAndSetMatrix4fv("mView", this.viewMatrix.matrix);
+}
+
+function setSizeInPerspectiveMatrix(height, width){
+  this.projectionMatrix.identity();
+  glMatrix.mat4.perspective(this.projectionMatrix.matrix, glMatrix.glMatrix.toRadian(45), height / width, 0.1, 1000);
 }
 
 function translateCamera(vec3Translate)

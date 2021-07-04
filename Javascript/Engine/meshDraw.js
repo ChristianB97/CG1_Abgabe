@@ -1,6 +1,6 @@
-export function MeshDraw(textureSetter, shaderContainer)
+export function MeshDraw(textureHolder, shaderContainer)
 {
-  this.textureSetter = textureSetter;
+  this.textureHolder = textureHolder;
   this.draw = function(){};
   this.setDrawingActive = setDrawingActive.bind(this);
   this.shaderContainer = shaderContainer;
@@ -14,7 +14,7 @@ function setDrawingActive()
 
 function draw(gl, prog, cameraUniformPool)
 {
-  this.textureSetter(gl);
+  this.textureHolder.setTextureAsActive(gl);
   this.shaderContainer.attributeLocatorPool.sendAllAttributeLocations(gl, prog);
   this.shaderContainer.uniformPool.sendAllUniforms(gl, prog);
   cameraUniformPool.sendAllUniforms(gl, prog);

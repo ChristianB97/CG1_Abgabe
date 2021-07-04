@@ -7,8 +7,6 @@ export function ImageProcessing(textures, vertexShader, fragmentShader)
   this.draw = draw.bind(this);
 }
 
-function setTexture()
-
 function draw(gl)
 {
 

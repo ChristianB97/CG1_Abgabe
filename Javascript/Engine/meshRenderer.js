@@ -11,7 +11,7 @@ export function MeshRenderer(objFileName, transform, vertexShaderName, fragmentS
   this.transform = transform;
   this.textureHolder = new TextureHolder();
   this.shaderContainer = new ShaderContainer(vertexShaderName, fragmentShaderName);
-  this.meshDraw = new MeshDraw(this.textureHolder.setTextureAsActive, this.shaderContainer);
+  this.meshDraw = new MeshDraw(this.textureHolder, this.shaderContainer);
 
   this.onDataLoaded = new ActionEvent();
   this.onDataLoaded.addEventListener(this.meshDraw.setDrawingActive);

@@ -59,15 +59,18 @@ function setShader(prog, shaderText, glShaderIdentifier)
   gl.attachShader(prog, shader);
 }
 
-export function createAndGetTexture(imageProperties, glBindingType, glParameters)
+export function createAndGetTexture(imageProperties, glBindingType, glParameters, slot)
 {
   let glTexture = gl.createTexture();
-
+  if (slot<0){
+    slot=0;
+  }
+  gl.activeTexture(gl.TEXTURE0+slot);
   gl.bindTexture(glBindingType, glTexture);
   glParameters.forEach((set, i) => {
     gl.texParameteri(set[0], set[1], set[2]);
   });
-  gl.activeTexture(gl.TEXTURE0);
+
 
   for(var i = 0; i < imageProperties.length; i++) {
     if (imageProperties[i].glTexture==null){
